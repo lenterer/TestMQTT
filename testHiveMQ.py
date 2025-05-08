@@ -5,7 +5,7 @@ import threading
 
 # setting callbacks for different events to see if it works, print the message etc.
 def on_connect(client, userdata, flags, rc, properties=None):
-    print("CONNACK received with code %s." % rc)
+    print("SUCCESS CONNACK received with code %s." % rc)
 
 # with this callback you can see if your publish was successful
 def on_publish(client, userdata, mid, properties=None):
@@ -21,7 +21,7 @@ def on_message(client, userdata, msg):
  
 def publish_loop():
     num = 0
-    while num <= 100:
+    while num <= 1000:
         # Initialize time with ms   
         tm = time.time()
         tm_ms = int(tm * 1000)
@@ -29,10 +29,11 @@ def publish_loop():
         ms = tm_ms % 1000
         formatted_with_ms = f"{formatted_time}.{ms:03d}"
                 
-        payload = f"hot at {num} & {formatted_with_ms} ms"
-        client.publish("test", payload=payload, qos=1)
+        payload = f" {num} & {formatted_with_ms} "
+        client.publish("test/time", payload=payload, qos=1)
         num = num + 1
-        time.sleep(0.03)  
+        time.sleep(0.05)
+    print("SUCCESS !!!")  
     client.disconnect()
 
 # using MQTT version 5 here, for 3.1.1: MQTTv311, 3.1: MQTTv31
